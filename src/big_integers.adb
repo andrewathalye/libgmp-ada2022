@@ -238,4 +238,13 @@ package body Big_Integers is
 		GCD (Result.C.MPZ.all, L.C.MPZ.all, R.C.MPZ.all);
 		return Result;
 	end Greatest_Common_Divisor;
+
+	-- Non-standard subprograms included for efficiency
+	function Factorial (Limit : Natural) return Big_Positive
+	is
+		Result : Big_Integer;
+	begin
+		Factorial (Result.C.MPZ.all, unsigned_long (Limit));
+		return Result;
+	end Factorial;
 end Big_Integers;

@@ -106,7 +106,9 @@ is
 	function Greatest_Common_Divisor
 		(L, R : Valid_Big_Integer) return Big_Positive
 	with Pre => (L /= 0 and R /= 0) or else raise Constraint_Error;
-	
+
+	-- Non-standard subprograms included for efficiency
+	function Factorial (Limit : Natural) return Big_Positive;
 private
 	type MPZ_Access is access GMP.MPZ_Type;
 

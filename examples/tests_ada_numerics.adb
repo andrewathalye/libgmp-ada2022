@@ -2,7 +2,7 @@ pragma Ada_2022;
 
 with Ada.Text_IO; use Ada.Text_IO;
 
-with Interfaces; use Interfaces;
+-- with Interfaces; use Interfaces;
 
 with Ada.Numerics.Big_Numbers.Big_Integers; use Ada.Numerics.Big_Numbers.Big_Integers;
 
@@ -11,23 +11,19 @@ is
 	subtype BI is Big_Integer;
 
 	-- General Comparison (impl using one function)
-	CmBI_1 : constant BI := 2 ** 32;
-	CmBI_2 : constant BI := 2 ** 40;
-	CmBI_R : constant Boolean := CmBI_1 < CmBI_2;
-
+	CmBI_R : constant Boolean := Big_Integer'(2 ** 32) < Big_Integer'(2 ** 40);
 
 	-- To_Big_Integer, To_Integer
-	TBI : constant BI := To_Big_Integer (Integer'Last);
-	TBI_R : constant Boolean := To_Integer (TBI) = Integer'Last;
+	TBI_R : constant Boolean := To_Integer (
+		To_Big_Integer (Integer'Last)) = Integer'Last;
 
 	-- In_Range
 	IR_R : constant Boolean := In_Range (47, 30, 50);
 
 	-- Signed / Unsigned Conversion + To_String + From_String
 --	package SUC is new Unsigned_Conversions (Unsigned_128);
---	SUC_1 : constant Unsigned_128 := Unsigned_128'Last;
---	SUC_2 : constant BI := SUC.To_Big_Integer (SUC_1);
---	SUC_R : constant Boolean := SUC_1 = SUC.From_Big_Integer (SUC_2);
+--	SUC_R : constant Boolean := Unsigned_128'Last = SUC.From_Big_Integer (
+--		SUC.To_Big_Integer (Unsigned_128'Last));
 	SUC_R : constant Boolean := False;
 
 	-- Arithmetic

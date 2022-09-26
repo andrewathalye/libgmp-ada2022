@@ -1,6 +1,7 @@
 pragma Ada_2022;
 
 with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Calendar; use Ada.Calendar;
 
 with Interfaces; use Interfaces;
 
@@ -11,23 +12,19 @@ is
 	subtype BI is Big_Integer;
 
 	-- General Comparison (impl using one function)
-	CmBI_1 : constant BI := 2 ** 32;
-	CmBI_2 : constant BI := 2 ** 40;
-	CmBI_R : constant Boolean := CmBI_1 < CmBI_2;
-
+	CmBI_R : constant Boolean := Big_Integer'(2 ** 32) < Big_Integer'(2 ** 40);
 
 	-- To_Big_Integer, To_Integer
-	TBI : constant BI := To_Big_Integer (Integer'Last);
-	TBI_R : constant Boolean := To_Integer (TBI) = Integer'Last;
+	TBI_R : constant Boolean := To_Integer (
+		To_Big_Integer (Integer'Last)) = Integer'Last;
 
 	-- In_Range
 	IR_R : constant Boolean := In_Range (47, 30, 50);
 
 	-- Signed / Unsigned Conversion + To_String + From_String
 	package SUC is new Unsigned_Conversions (Unsigned_128);
-	SUC_1 : constant Unsigned_128 := Unsigned_128'Last;
-	SUC_2 : constant BI := SUC.To_Big_Integer (SUC_1);
-	SUC_R : constant Boolean := SUC_1 = SUC.From_Big_Integer (SUC_2);
+	SUC_R : constant Boolean := Unsigned_128'Last = SUC.From_Big_Integer (
+		SUC.To_Big_Integer (Unsigned_128'Last));
 
 	-- Arithmetic
 	AR_ABS_R : constant Boolean := abs BI'(-300) = BI'(300);
@@ -44,10 +41,18 @@ is
 
 	-- Large Numbers
 	EX_R : constant Boolean := (2 ** 1024) = From_String ("179769313486231590772930519078902473361797697894230657273430081157732675805500963132708477322407536021120113879871393357658789768814416622492847430639474124377767893424865485276302219601246094119453082952085005768838150682342462881473913110540827237163350510684586298239947245938479716304835356329624224137216");
+
+	-- Extensions
+	Discard_FAC_BI : BI;
+	FAC : constant := 100000;
+
+	D1 : Duration;
+	D2 : Duration;
 begin
 	Put_Line ("Big_Integer Tests:");
 	Put_Line ("If any of these tests fail, please report a bug.");
 	New_Line;
+
 	Put_Line ("CmBI: " & CmBI_R'Image);
 	Put_Line ("TBI: " & TBI_R'Image);
 	Put_Line ("IR: " & IR_R'Image);
@@ -64,4 +69,13 @@ begin
 	Put_Line ("AR_MAX: " & AR_MAX_R'Image);
 	Put_Line ("AR_GCD: " & AR_GCD_R'Image);
 	Put_Line ("EX: " & EX_R'Image);
+	New_Line;
+
+	Put_Line ("Extension Tests:");
+
+	D1 := Seconds (Clock);
+	Discard_FAC_BI := Factorial (FAC);
+	D2 := Seconds (Clock);
+
+	Put_Line ("FAC:" & Duration'Image (D2 - D1));
 end Tests;

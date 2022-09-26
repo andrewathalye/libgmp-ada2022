@@ -197,6 +197,14 @@ is
 		Import => True,
 		Convention => C,
 		External_Name => "__gmpz_neg";
+
+	procedure Factorial (
+		Dest : out MPZ_Type;
+		Limit : unsigned_long)
+	with
+		Import => True,
+		Convention => C,
+		External_Name => "__gmpz_fac_ui";
 private
 	type MPZ_Type is record
 		mp_alloc : Integer;
