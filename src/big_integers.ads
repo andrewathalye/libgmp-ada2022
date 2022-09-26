@@ -91,8 +91,8 @@ is
 		Buffer : in out Root_Buffer_Type'Class;
 		Arg : in Valid_Big_Integer);
 
---	function "+" (L : Valid_Big_Integer) return Valid_Big_Integer;
---	function "-" (L : Valid_Big_Integer) return Valid_Big_Integer;
+	function "+" (L : Valid_Big_Integer) return Valid_Big_Integer;
+	function "-" (L : Valid_Big_Integer) return Valid_Big_Integer;
 	function "abs" (L : Valid_Big_Integer) return Valid_Big_Integer;
 	function "+" (L, R : Valid_Big_Integer) return Valid_Big_Integer;
 	function "-" (L, R : Valid_Big_Integer) return Valid_Big_Integer;

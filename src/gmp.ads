@@ -189,6 +189,14 @@ is
 		Import => True,
 		Convention => C,
 		External_Name => "__gmpz_gcd";
+
+	procedure Negate (
+		Dest : out MPZ_Type;
+		Source : MPZ_Type)
+	with
+		Import => True,
+		Convention => C,
+		External_Name => "__gmpz_neg";
 private
 	type MPZ_Type is record
 		mp_alloc : Integer;

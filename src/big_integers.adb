@@ -130,6 +130,17 @@ package body Big_Integers is
 	end Put_Image;
 
 	-- Arithmetic
+	function "+" (L : Valid_Big_Integer) return Valid_Big_Integer
+	is (L);
+
+	function "-" (L : Valid_Big_Integer) return Valid_Big_Integer
+	is
+		Result : Big_Integer;
+	begin
+		Negate (Result.C.MPZ.all, L.C.MPZ.all);
+		return Result;
+	end "-";
+
 	function "abs" (L : Valid_Big_Integer) return Valid_Big_Integer
 	is
 		Result : Big_Integer;
