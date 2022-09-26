@@ -1,0 +1,12 @@
+with "libgmp.gpr";
+
+project Examples is
+	for Source_Dirs use ("examples");
+	for Object_Dir use "obj";
+	for Exec_Dir use "bin";
+	for Main use ("pi_digits.adb", "pi_digits_gmp.adb", "pi_digits_gmp_big_integer.adb");
+
+	package Compiler is
+		for Default_Switches ("Ada") use ("-gnatwa", "-gnatVa", "-gnaty-h", "-O2");
+	end Compiler;
+end Examples;
