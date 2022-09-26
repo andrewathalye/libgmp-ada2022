@@ -97,11 +97,9 @@ package body Big_Integers is
 			Base => Base,
 			Source => Arg.C.MPZ.all);
 	
-		Result : constant String := (
-			if Arg >=0 then " " & Value (Str)
-			else Value (Str));
+		Result : constant String := Value (Str);
 
-		Necessary_Width : constant Natural := Width - Result'Length;
+		Necessary_Width : constant Integer := Width - Result'Length;
 	begin
 		Free (Str);
 
@@ -126,7 +124,11 @@ package body Big_Integers is
 		Arg : in Valid_Big_Integer)
 	is
 	begin
-		Put (Buffer, To_String (Arg));
+		Put (Buffer, (
+			if Arg >= 0 then 
+				" " & To_String (Arg)
+			else
+				To_String (Arg)));
 	end Put_Image;
 
 	-- Arithmetic
