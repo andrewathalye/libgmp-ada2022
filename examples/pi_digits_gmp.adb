@@ -13,9 +13,9 @@ is
 	pragma Warnings (Off, "overlaps with actual for");
 
 	Tmp1, Tmp2, Acc, Den, Num : MPZ_Type;
-	K : unsigned := 0;
+	K : unsigned_long := 0;
 
-	function Extract_Digit (N : unsigned) return unsigned
+	function Extract_Digit (N : unsigned_long) return unsigned_long
 	is begin
 		Multiply (Tmp1, Num, N);
 		Add (Tmp2, Tmp1, Acc);
@@ -26,7 +26,7 @@ is
 	
 	pragma Inline (Extract_Digit);
 	
-	procedure Eliminate_Digit (N : unsigned)
+	procedure Eliminate_Digit (N : unsigned_long)
 	is begin
 		Multiply (Tmp1, Den, N);
 		Subtract (Acc, Acc, Tmp1);
@@ -49,7 +49,7 @@ is
 
 	pragma Inline (Next_Term);
 
-	D : unsigned;
+	D : unsigned_long;
 	I : Natural := 0;
 begin
 	Init (Tmp1);

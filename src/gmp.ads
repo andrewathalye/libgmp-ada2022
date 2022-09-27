@@ -11,10 +11,19 @@ is
 	-- Low-level subprograms
 	type MPZ_Type is limited private;
 
+	-- Prevent use-after-free / use without initialisation
+	subtype Valid_MPZ_Type is MPZ_Type
+	with
+		Dynamic_Predicate => Is_Valid (Valid_MPZ_Type),
+		Predicate_Failure =>
+			"MPZ_Type must be initialised before use";
+	
+	function Is_Valid (Source : MPZ_Type) return Boolean;
+
 	procedure Multiply (
 		Dest : out MPZ_Type;
-		Source_1 : MPZ_Type;
-		Source_2 : unsigned)
+		Source_1 : Valid_MPZ_Type;
+		Source_2 : unsigned_long)
 	with
 		Import => True,
 		Convention => C,
@@ -22,8 +31,7 @@ is
 	
 	procedure Multiply (
 		Dest : out MPZ_Type;
-		Source_1 : MPZ_Type;
-		Soruce_2 : MPZ_Type)
+		Source_1, Source_2 : Valid_MPZ_Type)
 	with
 		Import => True,
 		Convention => C,
@@ -31,8 +39,7 @@ is
 	
 	procedure Add (
 		Dest : out MPZ_Type;
-		Source_1 : MPZ_Type;
-		Source_2 : MPZ_Type)
+		Source_1, Source_2 : Valid_MPZ_Type)
 	with
 		Import => True,
 		Convention => C,
@@ -40,8 +47,7 @@ is
 	
 	procedure Subtract (
 		Dest : out MPZ_Type;
-		Source_1 : MPZ_Type;
-		Source_2 : MPZ_Type)
+		Source_1, Source_2 : Valid_MPZ_Type)
 	with
 		Import => True,
 		Convention => C,
@@ -49,22 +55,19 @@ is
 	
 	procedure Divide (
 		Dest : out MPZ_Type;
-		Source_1 : MPZ_Type;
-		Source_2 : MPZ_Type)
+		Source_1, Source_2 : Valid_MPZ_Type)
 	with
 		Import => True,
 		Convention => C,
 		External_Name => "__gmpz_tdiv_q";
 	
-	function Compare (
-		Source_1 : MPZ_Type;
-		Source_2 : MPZ_Type) return Integer
+	function Compare (Source_1, Source_2 : Valid_MPZ_Type) return Integer
 	with
 		Import => True,
 		Convention => C,
 		External_Name => "__gmpz_cmp";
 	
-	function Convert (Source : MPZ_Type) return unsigned
+	function Convert (Source : Valid_MPZ_Type) return unsigned_long
 	with
 		Import => True,
 		Convention => C,
@@ -73,13 +76,13 @@ is
 	function Convert (
 			Dest : chars_ptr;
 			Base : Integer;
-			Source : MPZ_Type) return chars_ptr
+			Source : Valid_MPZ_Type) return chars_ptr
 	with
 		Import => True,
 		Convention => C,
 		External_Name => "__gmpz_get_str";
 	
-	function Convert (Source : MPZ_Type) return Integer
+	function Convert (Source : Valid_MPZ_Type) return Long_Integer
 	with
 		Import => True,
 		Convention => C,
@@ -87,7 +90,7 @@ is
 	
 	procedure Set (
 		Destination : out MPZ_Type;
-		Source : unsigned)
+		Source : unsigned_long)
 	with
 		Import => True,
 		Convention => C,
@@ -95,15 +98,15 @@ is
 	
 	procedure Set (
 		Destination : out MPZ_Type;
-		Source : MPZ_Type)
+		Source : Valid_MPZ_Type)
 	with
 		Import => True,
 		Convention => C,
 		External_Name => "__gmpz_set";
 
 	procedure Set (
-			Dest : out MPZ_Type;
-			Source : Integer)
+		Dest : out MPZ_Type;
+		Source : Long_Integer)
 	with
 		Import => True,
 		Convention => C,
@@ -118,6 +121,7 @@ is
 		Convention => C,
 		External_Name => "__gmpz_set_str";
 	
+	-- Initialise and set to zero
 	procedure Init (Destination : out MPZ_Type)
 	with
 		Import => True,
@@ -126,7 +130,7 @@ is
 	
 	procedure Init (
 		Destination : out MPZ_Type;
-		Value : unsigned)
+		Value : unsigned_long)
 	with
 		Import => True,
 		Convention => C,
@@ -134,13 +138,14 @@ is
 	
 	procedure Init (
 		Destination : out MPZ_Type;
-		Value : MPZ_Type)
+		Value : Valid_MPZ_Type)
 	with
 		Import => True,
 		Convention => C,
 		External_Name => "__gmpz_init_set";
 	
-	procedure Clear (Destination : out MPZ_Type)
+	-- Free memory allocated for MPZ_Type
+	procedure Clear (Destination : in out Valid_MPZ_Type)
 	with
 		Import => True,
 		Convention => C,
@@ -148,7 +153,7 @@ is
 
 	procedure Absolute_Value (
 		Dest : out MPZ_Type;
-		Source : MPZ_Type)
+		Source : Valid_MPZ_Type)
 	with
 		Import => True,
 		Convention => C,
@@ -156,8 +161,8 @@ is
 
 	procedure Exponent (
 			Dest : out MPZ_Type;
-			Base : MPZ_Type;
-			Exponent : unsigned)
+			Base : Valid_MPZ_Type;
+			Exponent : unsigned_long)
 	with
 		Import => True,
 		Convention => C,
@@ -165,9 +170,7 @@ is
 
 	procedure Exponent (
 			Dest : out MPZ_Type;
-			Base : MPZ_Type;
-			Exponent : MPZ_Type;
-			Modulo : MPZ_Type)
+			Base, Exponent, Modulo : Valid_MPZ_Type)
 	with
 		Import => True,
 		Convention => C,
@@ -175,8 +178,7 @@ is
 
 	procedure Remainder (
 		Dest : out MPZ_Type;
-		Source_1 : MPZ_Type;
-		Source_2 : MPZ_Type)
+		Source_1, Source_2 : Valid_MPZ_Type)
 	with
 		Import => True,
 		Convention => C,
@@ -184,7 +186,7 @@ is
 
 	procedure GCD (
 		Dest : out MPZ_Type;
-		Source_1, Source_2 : MPZ_Type)
+		Source_1, Source_2 : Valid_MPZ_Type)
 	with
 		Import => True,
 		Convention => C,
@@ -192,7 +194,7 @@ is
 
 	procedure Negate (
 		Dest : out MPZ_Type;
-		Source : MPZ_Type)
+		Source : Valid_MPZ_Type)
 	with
 		Import => True,
 		Convention => C,
@@ -205,10 +207,21 @@ is
 		Import => True,
 		Convention => C,
 		External_Name => "__gmpz_fac_ui";
+
+	procedure Modulo (
+			Dest : out MPZ_Type;
+			Source_1 : Valid_MPZ_Type;
+			Source_2 : Valid_MPZ_Type)
+		with
+			Import => True,
+			Convention => C,
+			External_Name => "__gmpz_mod";
 private
 	type MPZ_Type is record
 		mp_alloc : Integer;
 		mp_size : Integer;
 		mp_d : System.Address := System.Null_Address;
-	end record;
+	end record
+	with
+		Convention => C;
 end GMP;

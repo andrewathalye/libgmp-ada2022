@@ -63,12 +63,12 @@ package body Big_Integers is
 	is
 		Result : Big_Integer;
 	begin
-		Set (Result.C.MPZ.all, Arg);
+		Set (Result.C.MPZ.all, Long_Integer (Arg));
 		return Result;
 	end To_Big_Integer;
 
 	function To_Integer (Arg : Valid_Big_Integer) return Integer
-	is (Convert (Arg.C.MPZ.all));
+	is (Integer (Long_Integer'(Convert (Arg.C.MPZ.all))));
 
 	package body Signed_Conversions is
 		function To_Big_Integer (Arg : Int) return Valid_Big_Integer
@@ -185,15 +185,6 @@ package body Big_Integers is
 
 	function "mod" (L, R : Valid_Big_Integer) return Valid_Big_Integer
 	is
-		procedure Modulo (
-			Dest : out MPZ_Type;
-			Source_1 : MPZ_Type;
-			Source_2 : MPZ_Type)
-		with
-			Import => True,
-			Convention => C,
-			External_Name => "__gmpz_mod";
-
 		Result : Big_Integer;
 	begin
 		Modulo (Result.C.MPZ.all, L.C.MPZ.all, R.C.MPZ.all);
@@ -214,7 +205,7 @@ package body Big_Integers is
 	is
 		Result : Big_Integer;
 	begin
-		Exponent (Result.C.MPZ.all, L.C.MPZ.all, unsigned (R));
+		Exponent (Result.C.MPZ.all, L.C.MPZ.all, unsigned_long (R));
 		return Result;
 	end "**";
 

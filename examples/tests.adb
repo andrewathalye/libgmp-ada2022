@@ -19,7 +19,7 @@ is
 		To_Big_Integer (Integer'Last)) = Integer'Last;
 
 	-- In_Range
-	IR_R : constant Boolean := In_Range (47, 30, 50);
+	IR_R : constant Boolean := In_Range (47, -30, 50);
 
 	-- Signed / Unsigned Conversion + To_String + From_String
 	package SUC is new Unsigned_Conversions (Unsigned_128);
@@ -42,17 +42,17 @@ is
 	-- Large Numbers
 	EX_R : constant Boolean := (2 ** 1024) = From_String ("179769313486231590772930519078902473361797697894230657273430081157732675805500963132708477322407536021120113879871393357658789768814416622492847430639474124377767893424865485276302219601246094119453082952085005768838150682342462881473913110540827237163350510684586298239947245938479716304835356329624224137216");
 
-	-- Extensions
+	-- Extensions (Currently Factorial)
 	Discard_FAC_BI : BI;
-	FAC : constant := 100000;
-
-	D1 : Duration;
-	D2 : Duration;
+	FAC_Iter : constant := 100000;
+	FAC_D1 : Duration;
+	FAC_D2 : Duration;
 begin
 	Put_Line ("Big_Integer Tests:");
 	Put_Line ("If any of these tests fail, please report a bug.");
 	New_Line;
 
+	-- See declarative section for meanings of names
 	Put_Line ("CmBI: " & CmBI_R'Image);
 	Put_Line ("TBI: " & TBI_R'Image);
 	Put_Line ("IR: " & IR_R'Image);
@@ -72,10 +72,8 @@ begin
 	New_Line;
 
 	Put_Line ("Extension Tests:");
-
-	D1 := Seconds (Clock);
-	Discard_FAC_BI := Factorial (FAC);
-	D2 := Seconds (Clock);
-
-	Put_Line ("FAC:" & Duration'Image (D2 - D1));
+	FAC_D1 := Seconds (Clock);
+	Discard_FAC_BI := Factorial (FAC_Iter);
+	FAC_D2 := Seconds (Clock);
+	Put_Line ("FAC:" & Duration'Image (FAC_D2 - FAC_D1));
 end Tests;
